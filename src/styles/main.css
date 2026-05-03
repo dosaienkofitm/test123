@@ -1,0 +1,320 @@
+@import url('./fonts.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #020608;
+    color: #CAD2CB;
+    font-family: 'Gilroy', sans-serif;
+}
+
+/* HEADER */
+
+.header {
+    background: #1C252B;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+}
+
+.logo img {
+    height: 55px;
+    cursor: pointer;
+}
+
+.header-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.btn-outline {
+    border: 1px solid #486B85;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #CAD2CB;
+    font-weight: 500;
+}
+
+.btn-outline:hover {
+    background: #486B85;
+}
+
+/* LOGIN */
+
+.login {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.login img {
+    width: 18px;
+    height: 18px;
+}
+
+/* NAV */
+
+.nav {
+    display: flex;
+    gap: 30px;
+    padding: 10px 40px;
+    background: #1C252B;
+    border-top: 1px solid #486B85;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #93B4BC;
+    padding-bottom: 5px;
+    font-weight: 500;
+}
+
+.nav a.active {
+    border-bottom: 2px solid #486B85;
+}
+
+/* MAIN */
+
+.container {
+    padding: 40px;
+}
+
+.title {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* CARD */
+
+.card {
+    display: flex;
+    gap: 40px;
+    background: #1C252B;
+    border-radius: 16px;
+    padding: 30px;
+}
+
+/* LEFT */
+
+.left {
+    flex: 2;
+}
+
+/* SECTION HEADER */
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-weight: 600;
+}
+
+.progress {
+    font-weight: 700;
+    color: #486B85;
+}
+
+/* BUTTONS */
+
+.actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background: #486B85;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-secondary {
+    border: 1px solid #93B4BC;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background: transparent;
+    color: #CAD2CB;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* MODULE */
+
+.module {
+    border: 1px solid #486B85;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.module-header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    background: #020608;
+    font-weight: 600;
+}
+
+.module-info {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.module-progress {
+    color: #93B4BC;
+    font-weight: 500;
+}
+
+/* MODULE CONTENT */
+
+.module-content {
+    padding: 10px 20px;
+}
+
+/* LESSON BUTTON */
+
+.lesson-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin: 6px 0;
+    background: #020608;
+    border: 1px solid #1C252B;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+/* ТЕКСТ УРОКУ */
+.lesson-title {
+    color: #CAD2CB;
+}
+
+/* СТАТУС ВСЕРЕДИНІ КНОПКИ */
+.lesson-status {
+    font-size: 13px;
+}
+
+/* ПРОЙДЕНО */
+.lesson-btn.done {
+    background: #1C252B;
+}
+
+.lesson-btn.done .lesson-status {
+    color: #93B4BC;
+}
+
+/* НЕ ПРОЙДЕНО (світліший / блідіший) */
+.lesson-btn.pending {
+    opacity: 0.6;
+}
+
+.lesson-btn.pending .lesson-status {
+    color: #93B4BC;
+}
+
+/* HOVER */
+
+.lesson-btn:hover {
+    background: #1C252B;
+    opacity: 1;
+}
+
+/* RIGHT */
+
+.right {
+    flex: 1;
+}
+
+.right h3 {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.right p {
+    color: #93B4BC;
+    line-height: 1.5;
+}
+/* BURGER */
+.burger {
+    display: none;
+    cursor: pointer;
+}
+
+.burger img {
+    max-height: 30px;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: #93B4BC;
+    font-weight: 500;
+    cursor: pointer;
+    padding-bottom: 5px;
+}
+
+.nav-btn.active {
+    border-bottom: 2px solid #486B85;
+}
+
+.container.main {
+    padding: 40px;
+}
+
+.container.compact {
+    padding: 0;
+}
+
+/* ADAPTIVE */
+@media (max-width: 900px) {
+    .card {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .nav {
+        display: none;
+    }
+
+    .burger {
+        display: block;
+    }
+
+    .header-right {
+        display: none;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 26px;
+    }
+}
