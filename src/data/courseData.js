@@ -1,3 +1,5 @@
+const IMG = `${import.meta.env.BASE_URL}images`
+
 export const modules = [
   {
     title: "Модуль 1 — Інтерфейс та база",
@@ -15,7 +17,7 @@ export const modules = [
 
   <p>Програма доступна на таких платформах як Mac OS X/Mac OS та Windows OS.</p>
 
-  <img src="/images/Lesson1.jpg" alt="Photoshop приклад роботи" class="lesson-image lesson-image--centered" />
+  <img src="${IMG}/Lesson1.jpg" alt="Photoshop приклад роботи" class="lesson-image lesson-image--centered" />
 
   <h3>Функції, інструменти та призначення Photoshop</h3>
 
@@ -27,7 +29,7 @@ export const modules = [
     <li><strong>Колажі та робота з композицією</strong> — програма є зручною для створення різного типу колажів для різноманітних цілей, таких як створення рекламної афіші чи то мудборду. Робота з шарами й дозволяє створити унікальні оригінальні колажі та працювати з композицією декількох зображень</li>
   </ul>
 
-  <img src="/images/Lesson1_2.jpg" alt="Photoshop приклад роботи" class="lesson-image lesson-image--centered" />
+  <img src="${IMG}/Lesson1_2.jpg" alt="Photoshop приклад роботи" class="lesson-image lesson-image--centered" />
 
   <p style="text-align: center; font-style: italic;">image by drobotdean on Freepik</p>
 
@@ -42,7 +44,7 @@ export const modules = [
 
   <p>На цьому уроці розглянемо інтерфейс з усім доступним функціоналом програми:</p>
 
-  <img src="/images/Lesson2.jpg" alt="Інтерфейс Photoshop" class="lesson-image lesson-image--centered" />
+  <img src="${IMG}//Lesson2.jpg" alt="Інтерфейс Photoshop" class="lesson-image lesson-image--centered" />
 
   <h3>Розберемо основні елементи інтерфейсу:</h3>
 
