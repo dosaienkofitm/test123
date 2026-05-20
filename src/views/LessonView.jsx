@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { modules } from '../data/courseData'
 
-// ─── Дані тесту ────────────────────────────────────────────────────────────
 const QUIZ_QUESTIONS = [
   {
     q: 'Для чого використовується Adobe Photoshop?',
@@ -40,7 +39,6 @@ const QUIZ_QUESTIONS = [
   },
 ]
 
-// ─── Компонент тесту ────────────────────────────────────────────────────────
 function QuizSection({ savedScore, onQuizSubmit }) {
   const total = QUIZ_QUESTIONS.length
   const [answers, setAnswers] = useState(Array(total).fill(null))
@@ -80,7 +78,6 @@ function QuizSection({ savedScore, onQuizSubmit }) {
     <div className="quiz-section">
       <h2 className="quiz-title">Тест за модулем 1</h2>
       <p className="quiz-subtitle">Adobe Photoshop: інтерфейс та основні інструменти</p>
-
       {QUIZ_QUESTIONS.map((q, qi) => (
         <div key={qi} className="quiz-question">
           <p className="quiz-q-text">
@@ -105,7 +102,6 @@ function QuizSection({ savedScore, onQuizSubmit }) {
           </div>
         </div>
       ))}
-
       {!submitted ? (
         <button className={`quiz-submit${allAnswered ? '' : ' disabled'}`} disabled={!allAnswered} onClick={handleSubmit}>
           Перевірити відповіді
@@ -123,7 +119,6 @@ function QuizSection({ savedScore, onQuizSubmit }) {
   )
 }
 
-// ─── Зірочки ───────────────────────────────────────────────────────────────
 function StarRating({ stars, max = 5 }) {
   return (
     <span className="star-rating">
@@ -134,7 +129,6 @@ function StarRating({ stars, max = 5 }) {
   )
 }
 
-// ─── Основний компонент ─────────────────────────────────────────────────────
 export default function LessonView({ id, progress, onMarkDone }) {
   const lesson = modules.flatMap(m => m.lessons || []).find(l => l.id === id)
   const isDone = progress[id] === true
@@ -143,27 +137,48 @@ export default function LessonView({ id, progress, onMarkDone }) {
   const savedQuizScore = quizScores[id] ?? null
   const QUIZ_TOTAL = QUIZ_QUESTIONS.length
 
+  // ── Таймер ──────────────────────────────────────────────────────────────
+  // Зберігаємо timeLeft в ref щоб інтервал завжди бачив актуальне значення
   const [timeLeft, setTimeLeft] = useState(0)
   const [canComplete, setCanComplete] = useState(true)
   const timerRef = useRef(null)
+  const timeLeftRef = useRef(0)
+
+  // Оновлюємо ref при кожній зміні state
+  useEffect(() => {
+    timeLeftRef.current = timeLeft
+  }, [timeLeft])
 
   useEffect(() => {
+    // Зупиняємо попередній таймер
     clearInterval(timerRef.current)
-    if (!lesson?.duration || isDone) { setCanComplete(true); setTimeLeft(0); return }
-    setTimeLeft(lesson.duration * 60)
-    setCanComplete(false)
-  }, [id])
 
-  useEffect(() => {
-    if (!lesson?.duration || isDone || timeLeft <= 0) return
+    // Якщо немає duration або урок вже пройдено — одразу дозволяємо
+    if (!lesson?.duration || isDone) {
+      setTimeLeft(0)
+      setCanComplete(true)
+      return
+    }
+
+    // Встановлюємо час і блокуємо кнопку
+    const seconds = lesson.duration * 60
+    setTimeLeft(seconds)
+    timeLeftRef.current = seconds
+    setCanComplete(false)
+
+    // Запускаємо інтервал — читає з ref, не залежить від stale closure
     timerRef.current = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) { clearInterval(timerRef.current); setCanComplete(true); return 0 }
-        return t - 1
-      })
+      const next = timeLeftRef.current - 1
+      timeLeftRef.current = next
+      setTimeLeft(next)
+      if (next <= 0) {
+        clearInterval(timerRef.current)
+        setCanComplete(true)
+      }
     }, 1000)
+
     return () => clearInterval(timerRef.current)
-  }, [id, isDone])
+  }, [id]) // ← тільки id! isDone навмисно не тут
 
   const mins = Math.floor(timeLeft / 60)
   const secs = String(timeLeft % 60).padStart(2, '0')
@@ -197,7 +212,11 @@ export default function LessonView({ id, progress, onMarkDone }) {
             </div>
             <div className={`badge badge-time${timeLeft > 0 && !isDone ? ' badge-time--counting' : ''}`}>
               <span className="badge-time-icon">⏱</span>
-              {isDone ? `~${lesson.duration} хв` : timeLeft > 0 ? `~${mins}:${secs} хв` : `~${lesson.duration} хв`}
+              {isDone
+                ? `~${lesson.duration} хв`
+                : timeLeft > 0
+                  ? `~${mins}:${secs} хв`
+                  : `~${lesson.duration} хв`}
             </div>
           </div>
         )}
@@ -259,7 +278,9 @@ export default function LessonView({ id, progress, onMarkDone }) {
         )}
         <p style={{ marginTop: '1rem', opacity: 0.7, fontSize: '0.875rem' }}>
           {isDone
-            ? isQuiz ? `✓ Тест пройдено: ${savedQuizScore}/${QUIZ_TOTAL}` : '✓ Ви вже пройшли цей урок.'
+            ? isQuiz
+              ? `✓ Тест пройдено: ${savedQuizScore}/${QUIZ_TOTAL}`
+              : '✓ Ви вже пройшли цей урок.'
             : 'Прочитайте матеріал і відмітьте урок як виконаний.'}
         </p>
       </div>
