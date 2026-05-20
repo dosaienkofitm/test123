@@ -40,25 +40,19 @@ const QUIZ_QUESTIONS = [
   },
 ]
 
-const QUIZ_STORAGE_KEY = 'quiz_module1_result'
-
 // ─── Компонент тесту ────────────────────────────────────────────────────────
-function QuizSection({ onQuizDone, isDone }) {
-  const [answers, setAnswers] = useState(Array(QUIZ_QUESTIONS.length).fill(null))
-  const [submitted, setSubmitted] = useState(false)
-  const [score, setScore] = useState(null)
+function QuizSection({ savedScore, onQuizSubmit }) {
+  const total = QUIZ_QUESTIONS.length
+  const [answers, setAnswers] = useState(Array(total).fill(null))
+  const [submitted, setSubmitted] = useState(savedScore !== null && savedScore !== undefined)
+  const [score, setScore] = useState(savedScore ?? null)
 
   useEffect(() => {
-    const saved = localStorage.getItem(QUIZ_STORAGE_KEY)
-    if (saved) {
-      try {
-        const { answers: a, score: s } = JSON.parse(saved)
-        setAnswers(a)
-        setScore(s)
-        setSubmitted(true)
-      } catch {}
+    if (savedScore !== null && savedScore !== undefined) {
+      setScore(savedScore)
+      setSubmitted(true)
     }
-  }, [])
+  }, [savedScore])
 
   const handleSelect = (qi, ai) => {
     if (submitted) return
@@ -67,20 +61,17 @@ function QuizSection({ onQuizDone, isDone }) {
 
   const handleSubmit = () => {
     const s = QUIZ_QUESTIONS.reduce(
-      (acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0),
-      0
+      (acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0), 0
     )
     setScore(s)
     setSubmitted(true)
-    localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify({ answers, score: s }))
-    if (s === QUIZ_QUESTIONS.length) onQuizDone?.()
+    onQuizSubmit(s)
   }
 
   const handleReset = () => {
-    setAnswers(Array(QUIZ_QUESTIONS.length).fill(null))
+    setAnswers(Array(total).fill(null))
     setSubmitted(false)
     setScore(null)
-    localStorage.removeItem(QUIZ_STORAGE_KEY)
   }
 
   const allAnswered = !answers.includes(null)
@@ -105,15 +96,8 @@ function QuizSection({ onQuizDone, isDone }) {
                 cls += ' selected'
               }
               return (
-                <button
-                  key={ai}
-                  className={cls}
-                  onClick={() => handleSelect(qi, ai)}
-                  disabled={submitted}
-                >
-                  <span className="quiz-option-letter">
-                    {String.fromCharCode(97 + ai)})
-                  </span>
+                <button key={ai} className={cls} onClick={() => handleSelect(qi, ai)} disabled={submitted}>
+                  <span className="quiz-option-letter">{String.fromCharCode(97 + ai)})</span>
                   {opt}
                 </button>
               )
@@ -123,33 +107,23 @@ function QuizSection({ onQuizDone, isDone }) {
       ))}
 
       {!submitted ? (
-        <button
-          className={`quiz-submit${allAnswered ? '' : ' disabled'}`}
-          disabled={!allAnswered}
-          onClick={handleSubmit}
-        >
+        <button className={`quiz-submit${allAnswered ? '' : ' disabled'}`} disabled={!allAnswered} onClick={handleSubmit}>
           Перевірити відповіді
         </button>
       ) : (
         <div className="quiz-result">
-          <div className={`quiz-score ${score === QUIZ_QUESTIONS.length ? 'perfect' : score >= 3 ? 'good' : 'retry'}`}>
-            {score === QUIZ_QUESTIONS.length
-              ? '🎉 Відмінно!'
-              : score >= 3
-              ? '👍 Непогано!'
-              : '📚 Варто повторити'}
-            <span className="quiz-score-num">{score} / {QUIZ_QUESTIONS.length}</span>
+          <div className={`quiz-score ${score === total ? 'perfect' : score >= 3 ? 'good' : 'retry'}`}>
+            {score === total ? '🎉 Відмінно!' : score >= 3 ? '👍 Непогано!' : '📚 Варто повторити'}
+            <span className="quiz-score-num">{score} / {total}</span>
           </div>
-          <button className="quiz-reset" onClick={handleReset}>
-            Спробувати ще раз
-          </button>
+          <button className="quiz-reset" onClick={handleReset}>Спробувати ще раз</button>
         </div>
       )}
     </div>
   )
 }
 
-// ─── Компонент зірочок ──────────────────────────────────────────────────────
+// ─── Зірочки ───────────────────────────────────────────────────────────────
 function StarRating({ stars, max = 5 }) {
   return (
     <span className="star-rating">
@@ -165,38 +139,26 @@ export default function LessonView({ id, progress, onMarkDone }) {
   const lesson = modules.flatMap(m => m.lessons || []).find(l => l.id === id)
   const isDone = progress[id] === true
   const isQuiz = id === 16
+  const quizScores = progress.__quizScores || {}
+  const savedQuizScore = quizScores[id] ?? null
+  const QUIZ_TOTAL = QUIZ_QUESTIONS.length
 
-  // Таймер — лише для уроків з duration
-  const totalSeconds = lesson?.duration ? lesson.duration * 60 : 0
-  const [timeLeft, setTimeLeft] = useState(totalSeconds)
-  const [canComplete, setCanComplete] = useState(isDone || !lesson?.duration)
+  const [timeLeft, setTimeLeft] = useState(0)
+  const [canComplete, setCanComplete] = useState(true)
   const timerRef = useRef(null)
 
-  // Скидаємо таймер при зміні уроку
   useEffect(() => {
-    if (!lesson?.duration) {
-      setCanComplete(true)
-      setTimeLeft(0)
-      return
-    }
-    if (isDone) {
-      setCanComplete(true)
-      setTimeLeft(0)
-      return
-    }
+    clearInterval(timerRef.current)
+    if (!lesson?.duration || isDone) { setCanComplete(true); setTimeLeft(0); return }
     setTimeLeft(lesson.duration * 60)
     setCanComplete(false)
   }, [id])
 
   useEffect(() => {
-    if (isDone || !lesson?.duration || timeLeft <= 0) return
+    if (!lesson?.duration || isDone || timeLeft <= 0) return
     timerRef.current = setInterval(() => {
       setTimeLeft(t => {
-        if (t <= 1) {
-          clearInterval(timerRef.current)
-          setCanComplete(true)
-          return 0
-        }
+        if (t <= 1) { clearInterval(timerRef.current); setCanComplete(true); return 0 }
         return t - 1
       })
     }, 1000)
@@ -205,19 +167,14 @@ export default function LessonView({ id, progress, onMarkDone }) {
 
   const mins = Math.floor(timeLeft / 60)
   const secs = String(timeLeft % 60).padStart(2, '0')
-  const timerLabel = timeLeft > 0 ? `~${mins}:${secs} хв` : `~${lesson?.duration ?? 0} хв`
 
   if (!lesson) {
     return (
       <>
         <div className="left">
-          <div className="section-header">
-            <div className="section-title">Урок не знайдено</div>
-          </div>
+          <div className="section-header"><div className="section-title">Урок не знайдено</div></div>
         </div>
-        <div className="right">
-          <p>Урок з id {id} не існує.</p>
-        </div>
+        <div className="right"><p>Урок з id {id} не існує.</p></div>
       </>
     )
   }
@@ -227,37 +184,32 @@ export default function LessonView({ id, progress, onMarkDone }) {
       <div className="left">
         <div className="section-header">
           <div className="section-title">{lesson.title}</div>
-          {isDone && <div className="progress">Пройдено ✓</div>}
+          {isDone && !isQuiz && <div className="progress">Пройдено ✓</div>}
+          {isQuiz && savedQuizScore !== null && (
+            <div className="progress quiz-score-badge">{savedQuizScore} / {QUIZ_TOTAL}</div>
+          )}
         </div>
 
-        {/* Плашки складності та часу — тільки для звичайних уроків */}
         {!isQuiz && lesson.duration != null && (
           <div className="lesson-badges">
             <div className="badge badge-difficulty">
               Складність&nbsp;<StarRating stars={lesson.stars ?? 0} />
             </div>
-            <div className={`badge badge-time ${timeLeft > 0 && !isDone ? 'badge-time--counting' : ''}`}>
+            <div className={`badge badge-time${timeLeft > 0 && !isDone ? ' badge-time--counting' : ''}`}>
               <span className="badge-time-icon">⏱</span>
-              {isDone ? `~${lesson.duration} хв` : timerLabel}
+              {isDone ? `~${lesson.duration} хв` : timeLeft > 0 ? `~${mins}:${secs} хв` : `~${lesson.duration} хв`}
             </div>
           </div>
         )}
 
         <div className="module">
           {isQuiz ? (
-            <QuizSection
-              isDone={isDone}
-              onQuizDone={() => onMarkDone(id)}
-            />
+            <QuizSection savedScore={savedQuizScore} onQuizSubmit={(s) => onMarkDone(id, s)} />
           ) : (
-            <div
-              className="lesson-content"
-              dangerouslySetInnerHTML={{ __html: lesson.content }}
-            />
+            <div className="lesson-content" dangerouslySetInnerHTML={{ __html: lesson.content }} />
           )}
         </div>
 
-        {/* Кнопка завершення — не показуємо для тесту (він сам викликає onMarkDone) */}
         {!isQuiz && (
           <div className="lesson-actions">
             {!isDone ? (
@@ -266,18 +218,17 @@ export default function LessonView({ id, progress, onMarkDone }) {
                   className={`btn-primary${canComplete ? '' : ' btn-disabled'}`}
                   disabled={!canComplete}
                   onClick={() => canComplete && onMarkDone(id)}
-                  title={canComplete ? '' : 'Дочитайте урок до кінця'}
                 >
-                  Відмітити як виконане
+                  ✓ Відмітити як виконане
                 </button>
                 {!canComplete && (
                   <span className="btn-hint">
-                    {mins}:{secs} — кнопка активується після завершення таймера
+                    Зачекайте {mins}:{secs} — кнопка активується після таймера
                   </span>
                 )}
               </div>
             ) : (
-              <div className="lesson-done-badge">Урок виконано</div>
+              <div className="lesson-done-badge">✓ Урок виконано</div>
             )}
           </div>
         )}
@@ -298,9 +249,17 @@ export default function LessonView({ id, progress, onMarkDone }) {
             </div>
           </div>
         )}
+        {isQuiz && savedQuizScore !== null && (
+          <div className="right-meta">
+            <div className="right-meta-item">
+              <span className="right-meta-label">Результат тесту</span>
+              <span style={{ color: '#4fc3f7', fontWeight: 600 }}>{savedQuizScore} / {QUIZ_TOTAL}</span>
+            </div>
+          </div>
+        )}
         <p style={{ marginTop: '1rem', opacity: 0.7, fontSize: '0.875rem' }}>
           {isDone
-            ? 'Ви вже пройшли цей урок.'
+            ? isQuiz ? `✓ Тест пройдено: ${savedQuizScore}/${QUIZ_TOTAL}` : '✓ Ви вже пройшли цей урок.'
             : 'Прочитайте матеріал і відмітьте урок як виконаний.'}
         </p>
       </div>
