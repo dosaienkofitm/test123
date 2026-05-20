@@ -1,8 +1,10 @@
+const IMG = `${import.meta.env.BASE_URL}images`
+
 export default function Header({ onBurgerClick, setView }) {
   return (
     <header className="header">
       <a href="#" className="logo">
-        <img src="/images/Logo.png" alt="Logo" />
+        <img src={`${IMG}/Logo.png`} alt="Logo" />
       </a>
 
       <div className="header-right">
@@ -17,13 +19,13 @@ export default function Header({ onBurgerClick, setView }) {
           className="login"
           onClick={() => setView({ type: 'login' })}
         >
-          <img src="/images/loginIcon.png" alt="" />
+          <img src={`${IMG}/loginIcon.png`} alt="" />
           <span>Увійти</span>
         </button>
       </div>
 
       <div className="burger" onClick={onBurgerClick}>
-        <img src="/images/BurgerButton.png" alt="menu" />
+        <img src={`${IMG}/BurgerButton.png`} alt="menu" />
       </div>
     </header>
   )

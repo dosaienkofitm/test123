@@ -86,27 +86,27 @@ export const modules = [
   <div class="lesson-slider">
     <div class="lesson-slider__track" id="slider-lesson3">
       <div class="lesson-slider__slide">
-        <img src="/images/Lesson3_1.jpg" alt="Essentials" class="lesson-slider__img" />
+        <img src="${IMG}/Lesson3_1.jpg" alt="Essentials" class="lesson-slider__img" />
         <p class="lesson-slider__caption">Essentials – стандартний універсальний режим, що підходить для більшості задач</p>
       </div>
       <div class="lesson-slider__slide">
-        <img src="/images/Lesson3_2.jpg" alt="3D" class="lesson-slider__img" />
+        <img src="${IMG}/Lesson3_2.jpg" alt="3D" class="lesson-slider__img" />
         <p class="lesson-slider__caption">3D – підходить для створення трьохмірних об’єктів</p>
       </div>
       <div class="lesson-slider__slide">
-        <img src="/images/Lesson3_3.jpg" alt="Graphic and Web" class="lesson-slider__img" />
+        <img src="${IMG}/Lesson3_3.jpg" alt="Graphic and Web" class="lesson-slider__img" />
         <p class="lesson-slider__caption">Graphic and Web – підходить для створення UI/UX дизайну</p>
       </div>
       <div class="lesson-slider__slide">
-        <img src="/images/Lesson3_4.jpg" alt="Motion" class="lesson-slider__img" />
+        <img src="${IMG}/Lesson3_4.jpg" alt="Motion" class="lesson-slider__img" />
         <p class="lesson-slider__caption">Motion – для роботи з відео та анімацією й створення моушен-дизайнів</p>
       </div>
       <div class="lesson-slider__slide">
-        <img src="/images/Lesson3_5.jpg" alt="Painting" class="lesson-slider__img" />
+        <img src="${IMG}/Lesson3_5.jpg" alt="Painting" class="lesson-slider__img" />
         <p class="lesson-slider__caption">Painting – робоча область, що оптимізована для створення діджитал живопису</p>
       </div>
       <div class="lesson-slider__slide">
-        <img src="/images/Lesson3_6.jpg" alt="Photography" class="lesson-slider__img" />
+        <img src="${IMG}/Lesson3_6.jpg" alt="Photography" class="lesson-slider__img" />
         <p class="lesson-slider__caption">Photography – робоча область, що оптимізована під обробку фотографій, так як її акцент іде на кольорову корекцію зображення</p>
       </div>
       
@@ -156,7 +156,7 @@ export const modules = [
             <li><strong>Object Selection tool</strong> <kbd>W</kbd> — автоматичне створення виділення на основі визначення об’єктів на зображенні </li>
           </ul>
 
-          <img src="/images/Lesson4_1.jpg" alt="Інструменти переміщення й виділення" class="lesson-image lesson-image--centered" />
+          <img src="${IMG}/Lesson4_1.jpg" alt="Інструменти переміщення й виділення" class="lesson-image lesson-image--centered" />
 
           <h3>Інструменти для малювання та редагування</h3>
           <p>Використовуються для малювання, ретуші та створення візуальних ефектів:</p>
@@ -168,7 +168,7 @@ export const modules = [
             <li><strong>Gradient tool</strong> <kbd>G</kbd> — створення градієнту (плавного переходу заданих кольорів)</li>
           </ul>
 
-          <img src="/images/Lesson4_2.jpg" alt="Інструменти малювання та редагування" class="lesson-image lesson-image--centered" />
+          <img src="${IMG}/Lesson4_2.jpg" alt="Інструменти малювання та редагування" class="lesson-image lesson-image--centered" />
 
           <h3>Векторні інструменти та текст</h3>
           <p>Використовуються в UX/UI дизайні, для створення логотипів або ж типографіки:</p>
@@ -178,7 +178,7 @@ export const modules = [
             <li><strong>Text Tool</strong> <kbd>T</kbd> — додавання тексту</li>
           </ul>
 
-          <img src="/images/Lesson4_3.jpg" alt="Векторні інструменти та текст" class="lesson-image lesson-image--centered" />
+          <img src="${IMG}/Lesson4_3.jpg" alt="Векторні інструменти та текст" class="lesson-image lesson-image--centered" />
 
           <h3>Додаткові інструменти які також можуть бути в нагоді в роботі:</h3>
           <ul>
@@ -211,7 +211,7 @@ export const modules = [
             <li><strong>Animated Zoom</strong> — анімоване масштабування</li>
           </ul>
 
-          <img src="/images/Lesson5_1.jpg" alt="Інструмент Zoom Tool" class="lesson-image lesson-image--centered" />
+          <img src="${IMG}/Lesson5_1.jpg" alt="Інструмент Zoom Tool" class="lesson-image lesson-image--centered" />
 
           <h4>Для швидкої навігації зручно використовувати комбінації клавіш:</h4>
           <ul>
@@ -256,7 +256,7 @@ export const modules = [
             <li>Збережіть файл на комп’ютері в .psd форматі через <strong>File → Save As</strong> або ж <kbd>Ctrl + S</kbd>.</li>
           </ol>
 
-          <img src="/images/Lesson5_2.jpg" alt="Інструмент Hand Tool та панель Navigator" class="lesson-image lesson-image--centered" />
+          <img src="${IMG}/Lesson5_2.jpg" alt="Інструмент Hand Tool та панель Navigator" class="lesson-image lesson-image--centered" />
           
           <p>Під час подібного редагування інструменти масштабування та переміщення використовуються постійно, так як вони дозволяють точно контролювати зміни на дрібних деталях.</p>
 
