@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { modules } from '../data/courseData'
+import LessonContent from '../components/LessonContent'
 
+// ─── Тест ──────────────────────────────────────────────────────────────────
 const QUIZ_QUESTIONS = [
   {
     q: 'Для чого використовується Adobe Photoshop?',
@@ -42,37 +44,21 @@ const QUIZ_QUESTIONS = [
 function QuizSection({ savedScore, onQuizSubmit }) {
   const total = QUIZ_QUESTIONS.length
   const [answers, setAnswers] = useState(Array(total).fill(null))
-  const [submitted, setSubmitted] = useState(savedScore !== null && savedScore !== undefined)
+  const [submitted, setSubmitted] = useState(savedScore != null)
   const [score, setScore] = useState(savedScore ?? null)
 
   useEffect(() => {
-    if (savedScore !== null && savedScore !== undefined) {
-      setScore(savedScore)
-      setSubmitted(true)
-    }
+    if (savedScore != null) { setScore(savedScore); setSubmitted(true) }
   }, [savedScore])
 
-  const handleSelect = (qi, ai) => {
-    if (submitted) return
-    setAnswers(prev => prev.map((v, i) => (i === qi ? ai : v)))
-  }
+  const handleSelect = (qi, ai) => { if (!submitted) setAnswers(p => p.map((v, i) => i === qi ? ai : v)) }
 
   const handleSubmit = () => {
-    const s = QUIZ_QUESTIONS.reduce(
-      (acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0), 0
-    )
-    setScore(s)
-    setSubmitted(true)
-    onQuizSubmit(s)
+    const s = QUIZ_QUESTIONS.reduce((acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0), 0)
+    setScore(s); setSubmitted(true); onQuizSubmit(s)
   }
 
-  const handleReset = () => {
-    setAnswers(Array(total).fill(null))
-    setSubmitted(false)
-    setScore(null)
-  }
-
-  const allAnswered = !answers.includes(null)
+  const handleReset = () => { setAnswers(Array(total).fill(null)); setSubmitted(false); setScore(null) }
 
   return (
     <div className="quiz-section">
@@ -80,22 +66,15 @@ function QuizSection({ savedScore, onQuizSubmit }) {
       <p className="quiz-subtitle">Adobe Photoshop: інтерфейс та основні інструменти</p>
       {QUIZ_QUESTIONS.map((q, qi) => (
         <div key={qi} className="quiz-question">
-          <p className="quiz-q-text">
-            <span className="quiz-q-num">{qi + 1}.</span> {q.q}
-          </p>
+          <p className="quiz-q-text"><span className="quiz-q-num">{qi + 1}.</span> {q.q}</p>
           <div className="quiz-options">
             {q.options.map((opt, ai) => {
               let cls = 'quiz-option'
-              if (submitted) {
-                if (ai === q.answer) cls += ' correct'
-                else if (answers[qi] === ai) cls += ' wrong'
-              } else if (answers[qi] === ai) {
-                cls += ' selected'
-              }
+              if (submitted) { if (ai === q.answer) cls += ' correct'; else if (answers[qi] === ai) cls += ' wrong' }
+              else if (answers[qi] === ai) cls += ' selected'
               return (
                 <button key={ai} className={cls} onClick={() => handleSelect(qi, ai)} disabled={submitted}>
-                  <span className="quiz-option-letter">{String.fromCharCode(97 + ai)})</span>
-                  {opt}
+                  <span className="quiz-option-letter">{String.fromCharCode(97 + ai)})</span>{opt}
                 </button>
               )
             })}
@@ -103,7 +82,7 @@ function QuizSection({ savedScore, onQuizSubmit }) {
         </div>
       ))}
       {!submitted ? (
-        <button className={`quiz-submit${allAnswered ? '' : ' disabled'}`} disabled={!allAnswered} onClick={handleSubmit}>
+        <button className={`quiz-submit${answers.includes(null) ? ' disabled' : ''}`} disabled={answers.includes(null)} onClick={handleSubmit}>
           Перевірити відповіді
         </button>
       ) : (
@@ -129,56 +108,40 @@ function StarRating({ stars, max = 5 }) {
   )
 }
 
+// ─── Основний компонент ─────────────────────────────────────────────────────
 export default function LessonView({ id, progress, onMarkDone }) {
   const lesson = modules.flatMap(m => m.lessons || []).find(l => l.id === id)
   const isDone = progress[id] === true
   const isQuiz = id === 16
-  const quizScores = progress.__quizScores || {}
-  const savedQuizScore = quizScores[id] ?? null
+  const savedQuizScore = (progress.__quizScores || {})[id] ?? null
   const QUIZ_TOTAL = QUIZ_QUESTIONS.length
 
-  // ── Таймер ──────────────────────────────────────────────────────────────
-  // Зберігаємо timeLeft в ref щоб інтервал завжди бачив актуальне значення
+  // ── Таймер (ref-based, без stale closure) ─────────────────────────────
   const [timeLeft, setTimeLeft] = useState(0)
   const [canComplete, setCanComplete] = useState(true)
   const timerRef = useRef(null)
   const timeLeftRef = useRef(0)
 
-  // Оновлюємо ref при кожній зміні state
-  useEffect(() => {
-    timeLeftRef.current = timeLeft
-  }, [timeLeft])
+  useEffect(() => { timeLeftRef.current = timeLeft }, [timeLeft])
 
   useEffect(() => {
-    // Зупиняємо попередній таймер
     clearInterval(timerRef.current)
+    if (!lesson?.duration || isDone) { setTimeLeft(0); setCanComplete(true); return }
 
-    // Якщо немає duration або урок вже пройдено — одразу дозволяємо
-    if (!lesson?.duration || isDone) {
-      setTimeLeft(0)
-      setCanComplete(true)
-      return
-    }
-
-    // Встановлюємо час і блокуємо кнопку
-    const seconds = lesson.duration * 60
-    setTimeLeft(seconds)
-    timeLeftRef.current = seconds
+    const secs = lesson.duration * 60
+    setTimeLeft(secs)
+    timeLeftRef.current = secs
     setCanComplete(false)
 
-    // Запускаємо інтервал — читає з ref, не залежить від stale closure
     timerRef.current = setInterval(() => {
       const next = timeLeftRef.current - 1
       timeLeftRef.current = next
       setTimeLeft(next)
-      if (next <= 0) {
-        clearInterval(timerRef.current)
-        setCanComplete(true)
-      }
+      if (next <= 0) { clearInterval(timerRef.current); setCanComplete(true) }
     }, 1000)
 
     return () => clearInterval(timerRef.current)
-  }, [id]) // ← тільки id! isDone навмисно не тут
+  }, [id])
 
   const mins = Math.floor(timeLeft / 60)
   const secs = String(timeLeft % 60).padStart(2, '0')
@@ -200,7 +163,7 @@ export default function LessonView({ id, progress, onMarkDone }) {
         <div className="section-header">
           <div className="section-title">{lesson.title}</div>
           {isDone && !isQuiz && <div className="progress">Пройдено ✓</div>}
-          {isQuiz && savedQuizScore !== null && (
+          {isQuiz && savedQuizScore != null && (
             <div className="progress quiz-score-badge">{savedQuizScore} / {QUIZ_TOTAL}</div>
           )}
         </div>
@@ -212,11 +175,7 @@ export default function LessonView({ id, progress, onMarkDone }) {
             </div>
             <div className={`badge badge-time${timeLeft > 0 && !isDone ? ' badge-time--counting' : ''}`}>
               <span className="badge-time-icon">⏱</span>
-              {isDone
-                ? `~${lesson.duration} хв`
-                : timeLeft > 0
-                  ? `~${mins}:${secs} хв`
-                  : `~${lesson.duration} хв`}
+              {isDone ? `~${lesson.duration} хв` : timeLeft > 0 ? `~${mins}:${secs} хв` : `~${lesson.duration} хв`}
             </div>
           </div>
         )}
@@ -225,7 +184,8 @@ export default function LessonView({ id, progress, onMarkDone }) {
           {isQuiz ? (
             <QuizSection savedScore={savedQuizScore} onQuizSubmit={(s) => onMarkDone(id, s)} />
           ) : (
-            <div className="lesson-content" dangerouslySetInnerHTML={{ __html: lesson.content }} />
+            // ← Замість dangerouslySetInnerHTML — чистий React
+            <LessonContent blocks={lesson.blocks} />
           )}
         </div>
 
@@ -241,9 +201,7 @@ export default function LessonView({ id, progress, onMarkDone }) {
                   ✓ Відмітити як виконане
                 </button>
                 {!canComplete && (
-                  <span className="btn-hint">
-                    Зачекайте {mins}:{secs} — кнопка активується після таймера
-                  </span>
+                  <span className="btn-hint">Зачекайте {mins}:{secs} — кнопка активується після таймера</span>
                 )}
               </div>
             ) : (
@@ -268,7 +226,7 @@ export default function LessonView({ id, progress, onMarkDone }) {
             </div>
           </div>
         )}
-        {isQuiz && savedQuizScore !== null && (
+        {isQuiz && savedQuizScore != null && (
           <div className="right-meta">
             <div className="right-meta-item">
               <span className="right-meta-label">Результат тесту</span>
@@ -278,9 +236,7 @@ export default function LessonView({ id, progress, onMarkDone }) {
         )}
         <p style={{ marginTop: '1rem', opacity: 0.7, fontSize: '0.875rem' }}>
           {isDone
-            ? isQuiz
-              ? `✓ Тест пройдено: ${savedQuizScore}/${QUIZ_TOTAL}`
-              : '✓ Ви вже пройшли цей урок.'
+            ? isQuiz ? `✓ Тест пройдено: ${savedQuizScore}/${QUIZ_TOTAL}` : '✓ Ви вже пройшли цей урок.'
             : 'Прочитайте матеріал і відмітьте урок як виконаний.'}
         </p>
       </div>
