@@ -1529,3 +1529,408 @@ body {
   background: #1a2d40 !important;
   font-weight: 700;
 }
+
+/* ================================================================
+   НОВІ ЕЛЕМЕНТИ — кольорова гама #1c252b / #020608 / #cad2cc / #486b85
+   Тільки класи яких не було раніше. Старі стилі не змінюються.
+================================================================ */
+
+/* ── WORK UPLOAD (урок 15 — блок завантаження роботи) ─────────── */
+
+.work-upload {
+  padding: 24px;
+  background: #1c252b;
+  border: 1px dashed #486b85;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.work-upload__hint {
+  font-size: 13px;
+  color: #7a9090;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.work-upload__pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #22303a;
+  border: 1px solid #2e3f4a;
+  color: #cad2cc;
+  padding: 11px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: border-color 0.2s, background 0.2s;
+  align-self: flex-start;
+}
+.work-upload__pick:hover {
+  border-color: #486b85;
+  background: #2a3d4a;
+}
+
+.work-upload__preview-wrap {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+.work-upload__preview {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: 8px;
+  border: 1px solid #2e3f4a;
+  display: block;
+  object-fit: contain;
+  background: #22303a;
+}
+.work-upload__change {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(2, 6, 8, 0.82);
+  border: 1px solid #2e3f4a;
+  color: #cad2cc;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.work-upload__change:hover { border-color: #486b85; }
+
+.work-upload__submit { align-self: flex-start; }
+
+/* Стан "роботу надіслано" */
+.work-submitted {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #1c252b;
+  border: 1px solid #2e3f4a;
+  border-radius: 12px;
+  margin-top: 8px;
+}
+.work-submitted__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #1a3a28;
+  color: #6abf88;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 1px solid #2a5a3a;
+}
+.work-submitted__text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #cad2cc;
+  font-size: 14px;
+  font-weight: 600;
+}
+.work-grade {
+  font-size: 13px;
+  color: #486b85;
+  font-weight: 400;
+}
+.work-grade strong { color: #7aaac8; }
+.work-grade-pending {
+  font-size: 13px;
+  color: #4a6070;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* ── PROFILE — МОЯ ПРАКТИЧНА РОБОТА ───────────────────────────── */
+
+.profile-work-card-full {
+  background: #1c252b;
+  border: 1px solid #2e3f4a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.profile-work-preview {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid #2e3f4a;
+}
+.profile-work-meta {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.profile-work-lesson {
+  font-size: 14px;
+  font-weight: 600;
+  color: #cad2cc;
+}
+.profile-work-date {
+  font-size: 12px;
+  color: #3a5060;
+}
+.profile-work-grade {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: #22303a;
+  border-radius: 8px;
+  border: 1px solid #2e3f4a;
+  flex-wrap: wrap;
+}
+.profile-work-grade--pending {
+  color: #4a6070;
+  font-size: 13px;
+  font-style: italic;
+  background: #1c252b;
+  border: 1px dashed #2e3f4a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 8px;
+}
+.profile-work-grade__label {
+  font-size: 11px;
+  color: #4a6070;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.profile-work-grade__value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #7aaac8;
+}
+.profile-work-grade__comment {
+  font-size: 12px;
+  color: #cad2cc;
+  font-style: italic;
+  opacity: 0.75;
+  width: 100%;
+}
+
+/* ── TEACHER VIEW ──────────────────────────────────────────────── */
+
+.teacher-loading {
+  color: #4a6070;
+  margin-top: 2rem;
+  font-size: 14px;
+}
+
+.teacher-error {
+  margin-top: 1.5rem;
+  padding: 16px 20px;
+  background: #1e1212;
+  border: 1px solid #5a2020;
+  border-radius: 10px;
+  color: #e09090;
+}
+.teacher-error p { margin: 0 0 6px; }
+.teacher-error__msg { font-size: 12px; font-family: monospace; opacity: 0.8; }
+.teacher-error__hint { font-size: 12px; color: #7a5050; margin-top: 8px; }
+.teacher-error__hint code {
+  background: #2a1a1a;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.teacher-empty {
+  margin-top: 2.5rem;
+  text-align: center;
+  color: #4a6070;
+  padding: 32px;
+  background: #1c252b;
+  border: 1px dashed #2e3f4a;
+  border-radius: 12px;
+}
+.teacher-empty__icon { font-size: 32px; margin-bottom: 12px; }
+.teacher-empty p { margin: 0; font-size: 15px; color: #cad2cc; }
+.teacher-empty__hint { font-size: 12px; color: #4a6070; margin-top: 6px !important; }
+
+.teacher-works-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.teacher-work-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: #1c252b;
+  border: 1px solid #2e3f4a;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.teacher-work-row:hover { border-color: #486b85; background: #22303a; }
+.teacher-work-row.active { border-color: #486b85; background: #22303a; }
+
+.teacher-work-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid #2e3f4a;
+  background: #22303a;
+}
+.teacher-work-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.teacher-work-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #cad2cc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.teacher-work-email {
+  font-size: 11px;
+  color: #4a6070;
+}
+.teacher-work-date {
+  font-size: 11px;
+  color: #3a5060;
+}
+.teacher-work-status { flex-shrink: 0; }
+
+.teacher-grade-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #1c2f3a;
+  color: #7aaac8;
+  border: 1px solid #486b85;
+}
+.teacher-grade-badge--pending {
+  color: #4a6070;
+  border-color: #2e3f4a;
+  background: transparent;
+}
+
+/* Права панель — перегляд роботи */
+.teacher-review {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.teacher-review h3 {
+  color: #cad2cc;
+  font-size: 1rem;
+  margin: 0;
+}
+.teacher-review-student {
+  font-size: 15px;
+  font-weight: 600;
+  color: #cad2cc;
+  margin: 0;
+}
+.teacher-review-email {
+  font-size: 12px;
+  color: #4a6070;
+  margin: 0;
+}
+.teacher-review-image {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #2e3f4a;
+  object-fit: contain;
+  max-height: 300px;
+  background: #22303a;
+  display: block;
+}
+
+.teacher-grade-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+.teacher-grade-label {
+  font-size: 11px;
+  color: #4a6070;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+.teacher-grade-stars {
+  display: flex;
+  gap: 6px;
+}
+.teacher-grade-star-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #2e3f4a;
+  background: #22303a;
+  color: #4a6070;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.teacher-grade-star-btn:hover {
+  border-color: #486b85;
+  color: #cad2cc;
+  background: #2a3d4a;
+}
+.teacher-grade-star-btn.active {
+  background: #486b85;
+  border-color: #486b85;
+  color: #cad2cc;
+}
+.teacher-grade-comment {
+  background: #22303a;
+  border: 1px solid #2e3f4a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #cad2cc;
+  font-size: 13px;
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.teacher-grade-comment:focus { border-color: #486b85; }
+.teacher-grade-comment::placeholder { color: #3a5060; }
+
+.teacher-grade-submit { margin-top: 4px; }
+
+.teacher-grade-saved {
+  font-size: 13px;
+  color: #6abf88;
+  font-weight: 600;
+  margin: 0;
+}
+
+.teacher-right-empty {
+  opacity: 0.5;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #cad2cc;
+}
+.teacher-right-empty h3 { margin: 0 0 1rem; }
+.teacher-right-empty p { margin: 0; line-height: 1.6; }

@@ -146,7 +146,7 @@
     "moduleId": 1,
     "order": 5,
     "title": "Навігація по документу",
-    "duration": 25,
+    "duration": 0,
     "stars": 2,
     "blocks": [
       { "type": "heading", "level": 2, "text": "Урок 5. Навігація по документу (Zoom, Hand) та перше редагування" },
