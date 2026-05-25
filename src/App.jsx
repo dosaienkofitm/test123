@@ -17,7 +17,7 @@ import TeacherView from './views/TeacherView'
 import { loadProgress, markLesson } from './utils/progress'
 import { defaultDoneIds } from './data/courseData'
 
-const TEACHER_EMAIL = 'dosaienko.fitm23@kubd.edu.ua'
+const TEACHER_EMAIL = 'dosaienko.fitm23@kubg.edu.ua'  // ← було kubd, має бути kubg
 
 export default function App() {
   const [view, setView] = useState({ type: 'course' })
@@ -59,9 +59,15 @@ export default function App() {
 
   const saveProgressToFirestore = async (newProgress) => {
     if (!auth.currentUser || isTeacher) return
-    const doneIds = Object.keys(newProgress).filter(k => k !== '__quizScores' && newProgress[k] === true).map(Number)
+    const doneIds = Object.keys(newProgress)
+      .filter(k => k !== '__quizScores' && newProgress[k] === true)
+      .map(Number)
     const quizScores = newProgress.__quizScores || {}
-    await setDoc(doc(db, 'users', auth.currentUser.uid), { doneIds, quizScores, updatedAt: new Date() }, { merge: true })
+    await setDoc(
+      doc(db, 'users', auth.currentUser.uid),
+      { doneIds, quizScores, updatedAt: new Date() },
+      { merge: true }
+    )
   }
 
   const handleMarkDone = (lessonId, quizScore = null) => {
@@ -82,7 +88,6 @@ export default function App() {
   }
 
   const renderView = () => {
-    // Вчитель бачить тільки свою панель
     if (isTeacher) return <TeacherView />
 
     switch (view.type) {
@@ -98,7 +103,7 @@ export default function App() {
   }
 
   if (authLoading) return (
-    <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh',color:'#cad2cc'}}>
+    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:'#cad2cc' }}>
       Завантаження...
     </div>
   )
